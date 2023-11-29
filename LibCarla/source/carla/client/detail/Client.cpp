@@ -527,6 +527,10 @@ namespace detail {
     return _pimpl->AsyncCall("stop_recorder");
   }
 
+  void Client::MakeRecorderFile(std::string input_file_name, std::string output_file_name) {
+    return _pimpl->AsyncCall("make_recorder_file", input_file_name, output_file_name);
+  }
+
   std::string Client::ShowRecorderFileInfo(std::string name, bool show_all) {
     return _pimpl->CallAndWait<std::string>("show_recorder_file_info", name, show_all);
   }

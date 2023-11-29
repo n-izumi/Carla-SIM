@@ -137,7 +137,7 @@ private:
 
   /** Whether the road map should be generated based on left-hand traffic. */
   UPROPERTY(Category = "Road Map", EditAnywhere)
-  bool bLeftHandTraffic = false;
+  bool bLeftHandTraffic = true;
 
   /** If true, the road map encoded as an image is saved to disk. The image is
     * saved to the "Saved" folder of the project.

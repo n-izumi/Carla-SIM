@@ -575,6 +575,7 @@ namespace road {
     DEBUG_ASSERT(_map_data.GetJunction(junction_id) != nullptr);
     _map_data.GetJunction(junction_id)->GetConnections().emplace(connection_id,
         Junction::Connection(connection_id, incoming_road, connecting_road));
+    // std::cout << "ConnectionID: "<< junction_id << "," << connection_id << "," << incoming_road << "," << connecting_road << std::endl;
   }
 
   void MapBuilder::AddLaneLink(
@@ -753,12 +754,17 @@ namespace road {
 
     // process each lane to define its nexts
     for (auto &road : _map_data._roads) {
+      // std::cout << "RoadId: " << road.first << std::endl;
       for (auto &section : road.second._lane_sections) {
+        // std::cout << " SectionId: " << section.second.GetId() << std::endl;
         for (auto &lane : section.second._lanes) {
+          // std::cout << "  LaneId: " << lane.first << std::endl;
 
           // add next roads
           for (auto next_lane : lane.second._next_lanes) {
             DEBUG_ASSERT(next_lane != nullptr);
+            // std::cout << "   NextRoadId: " << next_lane->GetRoad()->GetId() << std::endl;
+            // std::cout << "   NextLaneId: " << next_lane->GetId() << std::endl;
             // avoid same road
             if (next_lane->GetRoad() != &road.second) {
               if (std::find(road.second._nexts.begin(), road.second._nexts.end(),
@@ -770,6 +776,8 @@ namespace road {
 
           // add prev roads
           for (auto prev_lane : lane.second._prev_lanes) {
+            // std::cout << "   PrevRoadId: " << prev_lane->GetRoad()->GetId() << std::endl;
+            // std::cout << "   PrevLaneId: " << prev_lane->GetId() << std::endl;
             DEBUG_ASSERT(prev_lane != nullptr);
             // avoid same road
             if (prev_lane->GetRoad() != &road.second) {
@@ -783,6 +791,9 @@ namespace road {
         }
       }
     }
+
+    // std::cout << "End" << std::endl;
+
   }
 
   geom::Transform MapBuilder::ComputeSignalTransform(std::unique_ptr<Signal> &signal, MapData &data) {
@@ -837,6 +848,7 @@ namespace road {
 
   void MapBuilder::CreateJunctionBoundingBoxes(Map &map) {
     for (auto &junctionpair : map._data.GetJunctions()) {
+      // std::cout << "JunctionID: " << map.GetJunction(junctionpair.first) << std::endl;
       auto* junction = map.GetJunction(junctionpair.first);
       auto waypoints = map.GetJunctionWaypoints(junction->GetId(), Lane::LaneType::Any);
       const int number_intervals = 10;

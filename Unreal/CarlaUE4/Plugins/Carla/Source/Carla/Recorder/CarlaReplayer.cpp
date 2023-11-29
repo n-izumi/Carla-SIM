@@ -154,6 +154,7 @@ std::string CarlaReplayer::ReplayFile(std::string Filename, double TimeStart, do
     Autoplay.ReplaySensors = ReplaySensors;
   }
 
+  Info << "Loading map " << TCHAR_TO_UTF8(*RecInfo.Mapfile) << std::endl;
   // get Total time of recorder
   TotalTime = GetTotalTime();
   Info << "Total time recorded: " << TotalTime << std::endl;

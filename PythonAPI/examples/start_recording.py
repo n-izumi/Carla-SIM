@@ -98,37 +98,37 @@ def main():
             blueprints = [x for x in blueprints if not x.id.endswith('firetruck')]
             blueprints = [x for x in blueprints if not x.id.endswith('ambulance')]
 
-        spawn_points = world.get_map().get_spawn_points()
-        number_of_spawn_points = len(spawn_points)
+        # spawn_points = world.get_map().get_spawn_points()
+        # number_of_spawn_points = len(spawn_points)
 
-        if count < number_of_spawn_points:
-            random.shuffle(spawn_points)
-        elif count > number_of_spawn_points:
-            msg = 'requested %d vehicles, but could only find %d spawn points'
-            logging.warning(msg, count, number_of_spawn_points)
-            count = number_of_spawn_points
+        # if count < number_of_spawn_points:
+        #     random.shuffle(spawn_points)
+        # elif count > number_of_spawn_points:
+        #     msg = 'requested %d vehicles, but could only find %d spawn points'
+        #     logging.warning(msg, count, number_of_spawn_points)
+        #     count = number_of_spawn_points
 
-        # @todo cannot import these directly.
-        SpawnActor = carla.command.SpawnActor
-        SetAutopilot = carla.command.SetAutopilot
-        FutureActor = carla.command.FutureActor
+        # # @todo cannot import these directly.
+        # SpawnActor = carla.command.SpawnActor
+        # SetAutopilot = carla.command.SetAutopilot
+        # FutureActor = carla.command.FutureActor
 
-        batch = []
-        for n, transform in enumerate(spawn_points):
-            if n >= count:
-                break
-            blueprint = random.choice(blueprints)
-            if blueprint.has_attribute('color'):
-                color = random.choice(blueprint.get_attribute('color').recommended_values)
-                blueprint.set_attribute('color', color)
-            blueprint.set_attribute('role_name', 'autopilot')
-            batch.append(SpawnActor(blueprint, transform).then(SetAutopilot(FutureActor, True)))
+        # batch = []
+        # for n, transform in enumerate(spawn_points):
+        #     if n >= count:
+        #         break
+        #     blueprint = random.choice(blueprints)
+        #     if blueprint.has_attribute('color'):
+        #         color = random.choice(blueprint.get_attribute('color').recommended_values)
+        #         blueprint.set_attribute('color', color)
+        #     blueprint.set_attribute('role_name', 'autopilot')
+        #     batch.append(SpawnActor(blueprint, transform).then(SetAutopilot(FutureActor, True)))
 
-        for response in client.apply_batch_sync(batch):
-            if response.error:
-                logging.error(response.error)
-            else:
-                actor_list.append(response.actor_id)
+        # for response in client.apply_batch_sync(batch):
+        #     if response.error:
+        #         logging.error(response.error)
+        #     else:
+        #         actor_list.append(response.actor_id)
 
         print('spawned %d vehicles, press Ctrl+C to exit.' % len(actor_list))
 

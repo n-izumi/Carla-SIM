@@ -1929,6 +1929,16 @@ void FCarlaServer::FPimpl::BindActions()
     return R<void>::Success();
   };
 
+  BIND_SYNC(make_recorder_file) << [this](std::string InputFileName, std::string OutputFileName) -> R<void>
+  {
+      REQUIRE_CARLA_EPISODE();
+      Episode->GetRecorder()->MakeFile(
+          InputFileName,
+          OutputFileName
+      );
+      return R<void>::Success();
+  };
+
   BIND_SYNC(show_recorder_file_info) << [this](
       std::string name,
       bool show_all) -> R<std::string>

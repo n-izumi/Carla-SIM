@@ -337,6 +337,8 @@ namespace detail {
 
     void StopRecorder();
 
+    void MakeRecorderFile(std::string input_file_name, std::string output_file_name);
+
     std::string ShowRecorderFileInfo(std::string name, bool show_all);
 
     std::string ShowRecorderCollisions(std::string name, char type1, char type2);

@@ -681,6 +681,8 @@ namespace road {
     if(_data.GetRoads().count(road_id)) {
       const auto &road = _data.GetRoads().at(road_id);
       // right lanes start at s 0
+      // const auto road_len = road.GetLength();
+
       for (const auto &lane_section : road.GetLaneSectionsAt(0.0)) {
         for (const auto &lane : lane_section.GetLanes()) {
           // add only the right (negative) lanes
@@ -729,6 +731,9 @@ namespace road {
         const double final_s = GetDistanceAtEndOfLane(lane);
         Waypoint lane_end(waypoint);
         lane_end.s = final_s;
+        // std::cout << "WayPointRoadID: " << waypoint.road_id << std::endl;
+        // std::cout << "LaneEnd s: " << lane_end.s << std::endl;
+        // std::cout << "LaneEndRoadID: " << lane_end.road_id << std::endl;
         result.push_back({waypoint, lane_end});
       });
     }
@@ -834,6 +839,10 @@ namespace road {
         next_transform.location.z);
     rtree_elements.emplace_back(std::make_pair(Rtree::BSegment(init, end),
         std::make_pair(current_waypoint, next_waypoint)));
+    // std::cout << "CurrentRoadID" << current_waypoint.road_id << std::endl;
+    // std::cout << " CurrentLocation" << current_transform.location.x << "," << current_transform.location.y << "," << current_transform.location.z << "," << std::endl;
+    // std::cout << "NextRoadID" << next_waypoint.road_id << std::endl;
+    // std::cout << " NextLocation" << next_transform.location.x << "," << next_transform.location.y << "," << next_transform.location.z << "," << std::endl;
   }
   // Adds a new element to the rtree element list using the position of the
   // waypoints, both ends of the segment
@@ -867,7 +876,7 @@ namespace road {
     // 1.8 degrees, maximum angle in a curve to place a segment
     constexpr double angle_threshold = geom::Math::Pi<double>() / 100.0;
     // maximum distance of a segment
-    constexpr double max_segment_length = 100.0;
+    constexpr double max_segment_length = 10.0;
 
     // Generate waypoints at start of every lane
     std::vector<Waypoint> topology;
@@ -879,21 +888,33 @@ namespace road {
         }
       });
     }
+    
+    // Generate waypoints at start of every lane
+    // std::vector<Waypoint> topology;
+    // for (auto i = topology_test.size() - 1; i >= 0; --i) {
+    //   topology.push_back(topology_test[i]);
+    // };
+    // std::cout << "topologySize: " << topology.size() << std::endl;
 
     // Container of segments and waypoints
     std::vector<Rtree::TreeElement> rtree_elements;
     // Loop through all lanes
     for (auto &waypoint : topology) {
+      // std::cout << "RoadID: " << waypoint.road_id << std::endl;
       auto &lane_start_waypoint = waypoint;
 
       auto current_waypoint = lane_start_waypoint;
 
       const Lane &lane = GetLane(current_waypoint);
 
+      // current_waypoint.s = lane.GetRoad()->GetLength();
+
       geom::Transform current_transform = ComputeTransform(current_waypoint);
 
+      // std::cout << "CurrentWaypoint s: " << lane.GetRoad()->GetLength() << std::endl;
       // Save computation time in straight lines
       if (lane.IsStraight()) {
+        // std::cout << "----------Lane is straight----------" << std::endl;
         double delta_s = min_delta_s;
         double remaining_length =
             GetRemainingLength(lane, current_waypoint.s);
@@ -915,6 +936,8 @@ namespace road {
             next_waypoint);
         // end of lane
       } else {
+        // auto prev = GetNext(current_waypoint, min_delta_s);
+        // std::cout << "----------Lane is turn----------" << std::endl;
         auto next_waypoint = current_waypoint;
 
         // Loop until the end of the lane
@@ -950,6 +973,7 @@ namespace road {
           geom::Transform next_transform = ComputeTransform(next_waypoint);
           double angle = geom::Math::GetVectorAngle(
               current_transform.GetForwardVector(), next_transform.GetForwardVector());
+          // std::cout << "Waypoint S: " << current_waypoint.s << ", " << next_waypoint.s << std::endl;
 
           if (std::abs(angle) > angle_threshold ||
               std::abs(current_waypoint.s - next_waypoint.s) > max_segment_length) {

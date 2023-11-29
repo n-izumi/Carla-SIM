@@ -539,6 +539,10 @@ namespace detail {
       _client.StopRecorder();
     }
 
+    void MakeRecorderFile(std::string input_file_name, std::string output_file_name) {
+      _client.MakeRecorderFile(input_file_name, output_file_name);
+    }
+
     std::string ShowRecorderFileInfo(std::string name, bool show_all) {
       return _client.ShowRecorderFileInfo(std::move(name), show_all);
     }

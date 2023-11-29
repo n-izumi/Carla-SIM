@@ -27,6 +27,7 @@
 #include "CarlaRecorderFrames.h"
 #include "CarlaRecorderInfo.h"
 #include "CarlaRecorderPosition.h"
+#include "CarlaRecorderFileMake.h"
 #include "CarlaRecorderQuery.h"
 #include "CarlaRecorderState.h"
 #include "CarlaReplayer.h"
@@ -141,6 +142,9 @@ public:
     return &Replayer;
   }
 
+  // makes
+  void MakeFile(std::string InputFileName, std::string OutputFileName);
+
   // queries
   std::string ShowFileInfo(std::string Name, bool bShowAll = false);
   std::string ShowFileCollisions(std::string Name, char Type1, char Type2);
@@ -195,6 +199,9 @@ private:
 
   // query tools
   CarlaRecorderQuery Query;
+
+  // make tools
+  CarlaRecorderFileMake MakeRecord;
 
   void AddExistingActors(void);
   void AddActorPosition(FCarlaActor *CarlaActor);

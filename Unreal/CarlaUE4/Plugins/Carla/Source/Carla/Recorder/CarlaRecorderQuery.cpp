@@ -122,11 +122,14 @@ std::string CarlaRecorderQuery::QueryInfo(std::string Filename, bool bShowAll)
           EventAdd.Read(File);
           Info << " Create " << EventAdd.DatabaseId << ": " << TCHAR_TO_UTF8(*EventAdd.Description.Id) <<
             " (" <<
-            static_cast<int>(EventAdd.Type) << ") at (" << EventAdd.Location.X << ", " <<
-            EventAdd.Location.Y << ", " << EventAdd.Location.Z << ")" << std::endl;
+            static_cast<int>(EventAdd.Type) << ") at Location (" << EventAdd.Location.X << ", " <<
+            EventAdd.Location.Y << ", " << EventAdd.Location.Z <<
+            ") Rotation (" << EventAdd.Rotation.X << ", " <<
+            EventAdd.Rotation.Y << ", " << EventAdd.Rotation.Z << ")" <<
+            std::endl;
           for (auto &Att : EventAdd.Description.Attributes)
           {
-            Info << "  " << TCHAR_TO_UTF8(*Att.Id) << " = " << TCHAR_TO_UTF8(*Att.Value) << std::endl;
+            Info << "  (" << static_cast<int>(Att.Type) << ")" << TCHAR_TO_UTF8(*Att.Id) << " = " << TCHAR_TO_UTF8(*Att.Value) << std::endl;
           }
         }
         break;

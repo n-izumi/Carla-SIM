@@ -32,9 +32,14 @@ ACarlaRecorder::ACarlaRecorder(const FObjectInitializer &ObjectInitializer)
   Disable();
 }
 
+void ACarlaRecorder::MakeFile(std::string InputFileName, std::string OutputFileName)
+{
+    return MakeRecord.MakeRecorderFile(InputFileName, OutputFileName);
+}
+
 std::string ACarlaRecorder::ShowFileInfo(std::string Name, bool bShowAll)
 {
-  return Query.QueryInfo(Name, bShowAll);
+    return Query.QueryInfo(Name, bShowAll);
 }
 
 std::string ACarlaRecorder::ShowFileCollisions(std::string Name, char Type1, char Type2)
